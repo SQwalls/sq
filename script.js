@@ -25,17 +25,61 @@ const reverseDakutenMap = Object.fromEntries(Object.entries(dakutenMap).map(([k,
 const reverseHandakutenMap = Object.fromEntries(Object.entries(handakutenMap).map(([k, v]) => [v, k]));
 const reverseSmallMap = Object.fromEntries(Object.entries(smallMap).map(([k, v]) => [v, k]));
 
+let randomSeedEnabled = false;
+const randomSeedButton = document.getElementById('randomSeed');
+
+randomSeedButton.addEventListener('click', () => {
+    randomSeedEnabled = !randomSeedEnabled;
+    randomSeedButton.classList.toggle('button-on', randomSeedEnabled);
+    randomSeedButton.classList.toggle('button-off', !randomSeedEnabled);
+    if (randomSeedEnabled) {
+        setRandomSeed();
+    }
+});
+
+document.getElementById('inputText').addEventListener('input', () => {
+    if (randomSeedEnabled) {
+        setRandomSeed();
+    }
+    autoTransform();
+});
+
+function setRandomSeed() {
+    const randomSeed = Math.floor(Math.random() * 10);
+    animateSeedChange(randomSeed);
+}
+
+function animateSeedChange(finalSeed) {
+    const seedInput = document.getElementById('shiftValue');
+    let iterations = 10;
+    let interval = 40; // milliseconds
+    let currentIteration = 0;
+
+    let intervalId = setInterval(() => {
+        const randomSeed = Math.floor(Math.random() * 10);
+        seedInput.value = randomSeed;
+
+        if (currentIteration >= iterations) {
+            clearInterval(intervalId);
+            seedInput.value = finalSeed;
+            autoTransform(); // シードが最終的に確定したら再変換
+        }
+
+        currentIteration++;
+    }, interval);
+}
+
 function autoTransform() {
     const inputText = document.getElementById('inputText').value;
     let shiftValue = document.getElementById('shiftValue').value;
-    
+
     if (!shiftValue) {
         shiftValue = 0;
     }
 
     const shift = parseInt(shiftValue, 10);
     let result;
-    
+
     if (isHiragana(inputText)) {
         result = postProcessEncrypt(encrypt(inputText, shift));
     } else if (isEncrypted(inputText)) {
@@ -43,7 +87,7 @@ function autoTransform() {
     } else {
         result = "Error: 変換できません";
     }
-    
+
     hackerEffect(result);
 }
 
@@ -124,6 +168,7 @@ function decrypt(text, shift) {
 
 function hackerEffect(finalText) {
     const resultElement = document.getElementById('result');
+    const originalText = resultElement.textContent;
     resultElement.textContent = finalText;
     resultElement.addEventListener('click', copyToClipboard);
     resultElement.style.cursor = 'pointer';
@@ -133,7 +178,7 @@ function hackerEffect(finalText) {
     let interval = 40; // milliseconds
     let displayText = finalText.split('');
     let randomText = displayText.map(() => characters.charAt(Math.floor(Math.random() * characters.length)));
-    
+
     let currentIteration = 0;
 
     let intervalId = setInterval(() => {
@@ -154,54 +199,6 @@ function hackerEffect(finalText) {
 
         currentIteration++;
     }, interval);
-
-    let animationId;
-
-    function drawMatrix() {
-        const canvas = document.getElementById('matrix');
-        const ctx = canvas.getContext('2d');
-        const width = canvas.width = window.innerWidth;
-        const height = canvas.height = window.innerHeight;
-        const cols = Math.floor(width / 20); // 列数の上限設定
-        const yuansu = [';', '/', '~', '?', '%', '#', '+', '=', '-', '_', '(', ')', '{', '}', '[', ']', '|'];
-
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-        ctx.fillRect(0, 0, width, height);
-
-        ctx.fillStyle = '#0f0';
-        ctx.font = '20px monospace';
-
-        for (let i = 0; i < cols; i++) {
-            const text = Array(Math.floor(Math.random() * height / 20) + 10)
-                .fill()
-                .map(() => yuansu[Math.floor(Math.random() * yuansu.length)])
-                .join('');
-            ctx.fillText(text, i * 20, Math.random() * height);
-        }
-
-        animationId = requestAnimationFrame(drawMatrix);
-    }
-
-    function startMatrix() {
-        const canvas = document.getElementById('matrix');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        animationId = requestAnimationFrame(drawMatrix);
-    }
-
-    function stopMatrix() {
-        cancelAnimationFrame(animationId);
-    }
-
-    // ページ読み込み時にマトリックスを開始
-    window.addEventListener('load', startMatrix);
-
-    // リサイズ時にキャンバスのサイズを更新
-    window.addEventListener('resize', () => {
-        const canvas = document.getElementById('matrix');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    });
 }
 
 function copyToClipboard() {
@@ -220,34 +217,34 @@ const inputText = document.getElementById('inputText');
 const shiftValue = document.getElementById('shiftValue');
 
 function shakeInputs() {
-  const randomX = Math.floor(Math.random() * 21) - 10;
-  const randomY = Math.floor(Math.random() * 21) - 10;
-  inputText.style.transform = `translate(${randomX}px, ${randomY}px)`;
-  shiftValue.style.transform = `translate(${randomX}px, ${randomY}px)`;
-  setTimeout(resetInputs, 100);
+    const randomX = Math.floor(Math.random() * 21) - 10;
+    const randomY = Math.floor(Math.random() * 21) - 10;
+    inputText.style.transform = `translate(${randomX}px, ${randomY}px)`;
+    shiftValue.style.transform = `translate(${randomX}px, ${randomY}px)`;
+    setTimeout(resetInputs, 100);
 }
 
 function resetInputs() {
-  inputText.style.transform = 'none';
-  shiftValue.style.transform = 'none';
+    inputText.style.transform = 'none';
+    shiftValue.style.transform = 'none';
 }
 
 setInterval(shakeInputs, 5000);
 
 // 画面のちらつき
 function flickerScreen() {
-  const flicker = document.createElement('div');
-  flicker.style.position = 'fixed';
-  flicker.style.top = '0';
-  flicker.style.left = '0';
-  flicker.style.width = '100%';
-  flicker.style.height = '100%';
-  flicker.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
-  flicker.style.zIndex = '9999';
-  document.body.appendChild(flicker);
-  setTimeout(() => {
-    document.body.removeChild(flicker);
-  }, 100);
+    const flicker = document.createElement('div');
+    flicker.style.position = 'fixed';
+    flicker.style.top = '0';
+    flicker.style.left = '0';
+    flicker.style.width = '100%';
+    flicker.style.height = '100%';
+    flicker.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+    flicker.style.zIndex = '9999';
+    document.body.appendChild(flicker);
+    setTimeout(() => {
+        document.body.removeChild(flicker);
+    }, 100);
 }
 
 setInterval(flickerScreen, 3000);

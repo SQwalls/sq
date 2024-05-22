@@ -11,27 +11,27 @@
 </head>
 <body>
   <div id="navArea">
+    <nav>
+      <div class="inner">
+        <ul>
+          <li><a href="#">Text</a></li>
+          <li><a href="#">Text</a></li>
+          <li><a href="#">Text</a></li>
+        </ul>
+      </div>
+    </nav>
 
-  <nav>
-    <div class="inner">
-      <ul>
-        <li><a href="#">Text</a></li>
-        <li><a href="#">Text</a></li>
-        <li><a href="#">Text</a></li>
-      </ul>
+    <div class="toggle_btn">
+      <span></span>
+      <span></span>
+      <span></span>
     </div>
-  </nav>
 
-  <div class="toggle_btn">
-    <span></span>
-    <span></span>
-    <span></span>
+    <div id="mask"></div>
   </div>
-
-  <div id="mask"></div>
-
-</div>
+  
   <div id="matrix"></div> 
+
   <div class="terminal">
     <div class="header">
       <span class="green">root@berlin:</span><span class="yellow">/decoder</span><span class="green">#</span>
@@ -39,9 +39,10 @@
     <div class="content">
       <p class="info" id="glitch-text">Oyasumi / Berlin All rights reserved.</p><br>
       <label for="inputText" class="green">input:</label><br>
-      <input type="text" id="inputText" placeholder="※テキストを入力" oninput="autoTransform()">
+      <input type="text" id="inputText" placeholder="text area" oninput="autoTransform()">
       <label for="shiftValue" class="green">seed:</label>
       <input type="number" id="shiftValue" placeholder="0" oninput="autoTransform()">
+      <button id="randomSeed" class="button-off">random</button>
       <h2 class="green">output:</h2>
       <div id="result" class="output"></div>
     </div>
