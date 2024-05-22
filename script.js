@@ -79,7 +79,7 @@ function hackerEffect(finalText) {
 
     let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#/&_+%-<>=';
     let iterations = 10;
-    let interval = 30; // milliseconds
+    let interval = 40; // milliseconds
     let displayText = finalText.split('');
     let randomText = displayText.map(() => characters.charAt(Math.floor(Math.random() * characters.length)));
     
