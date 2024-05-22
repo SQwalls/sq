@@ -4,7 +4,7 @@ const hiragana = [
 ];
 const symbols = [
     "@#/&_","DoKtg", "AjTpM", "sGhVz", "NndxU",
-    "iLwvb", "JufkC", "Rqr", "BESeF", "%+<", "[:\=|"
+    "iLwvb", "JufkC", "Rqr", "BESeF", "%+<", "[:\\=|"
 ];
 
 const dakutenMap = {
@@ -48,11 +48,11 @@ function autoTransform() {
 }
 
 function isHiragana(text) {
-    return /^[\u3040-\u309F]+$/.test(text);
+    return /^[\u3040-\u309Fー、。！？]+$/.test(text);
 }
 
 function isEncrypted(text) {
-    return /^[\w@#/&_+%-<>=]+.\d+$/.test(text);
+    return /^[\w@#/&_+%-<>=\[\]:\\|]+\.\d+$/.test(text);
 }
 
 function encrypt(text, shift) {
@@ -128,7 +128,7 @@ function hackerEffect(finalText) {
     resultElement.addEventListener('click', copyToClipboard);
     resultElement.style.cursor = 'pointer';
 
-    let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#/&_+%-<>=';
+    let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#/&_+%-<>=[]:\\|';
     let iterations = 10;
     let interval = 40; // milliseconds
     let displayText = finalText.split('');
