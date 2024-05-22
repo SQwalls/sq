@@ -31,9 +31,8 @@ body {
 .yellow {
   color: #ff0;
 }
-/*============
-nav
-=============*/
+
+/* nav */
 nav {
   display: block;
   position: fixed;
@@ -41,7 +40,7 @@ nav {
   left: -300px;
   bottom: 0;
   width: 300px;
-  background: #ffffff;
+  background: #000000;
   overflow-x: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
@@ -66,14 +65,14 @@ nav .inner ul li {
 }
 nav .inner ul li a {
   display: block;
-  color: #333;
+  color: #0f0; /* 文字色を緑に変更 */
   font-size: 14px;
   padding: 1em;
   text-decoration: none;
   transition-duration: 0.2s;
 }
 nav .inner ul li a:hover {
-  background: #e4e4e4;
+  background: #333; /* ホバー時の背景色を黒に変更 */
 }
 @media screen and (max-width: 767px) {
   nav {
@@ -81,9 +80,8 @@ nav .inner ul li a:hover {
     width: 240px;
   }
 }
-/*============
-@keyframes
-=============*/
+
+/* @keyframes */
 @keyframes equalizer01 {
   0% {
     width: 70%;
@@ -119,6 +117,7 @@ nav .inner ul li a:hover {
     width: 70%;
   }
 }
+
 @keyframes equalizer02 {
   0% {
     width: 30%;
@@ -154,9 +153,8 @@ nav .inner ul li a:hover {
     width: 30%;
   }
 }
-/*============
-.toggle_btn
-=============*/
+
+/* .toggle_btn */
 .toggle_btn {
   display: block;
   position: fixed;
@@ -218,9 +216,8 @@ nav .inner ul li a:hover {
     left: 260px;
   }
 }
-/*============
-#mask
-=============*/
+
+/* #mask */
 #mask {
   display: none;
 }
@@ -286,7 +283,7 @@ input[type="text"], input[type="number"] {
   top: 0;
   width: 1em;
   white-space: nowrap;
-  color: #77787B;
+  color: #fff; /* 文字色を白に変更 */
   animation: fall linear infinite;
 }
 
