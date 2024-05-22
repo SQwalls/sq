@@ -1,10 +1,10 @@
 const hiragana = [
     "あいうえお", "かきくけこ", "さしすせそ", "たちつてと", "なにぬねの",
-    "はひふへほ", "まみむめも", "やゆよ", "らりるれろ", "わをん"
+    "はひふへほ", "まみむめも", "やゆよ", "らりるれろ", "わをん", "ー、。！？"
 ];
 const symbols = [
     "@#/&_","DoKtg", "AjTpM", "sGhVz", "NndxU",
-    "iLwvb", "JufkC", "Rqr", "BESeF", "%+<"
+    "iLwvb", "JufkC", "Rqr", "BESeF", "%+<", "[:\=|"
 ];
 
 const dakutenMap = {
