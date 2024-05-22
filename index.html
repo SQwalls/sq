@@ -4,34 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>暗号変換サイト</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        .container {
-            max-width: 600px;
-            margin: auto;
-        }
-        textarea, input, button, select {
-            width: 100%;
-            margin: 10px 0;
-            padding: 10px;
-            font-size: 16px;
-        }
-        textarea {
-            height: 100px;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
         <h1>暗号変換サイト</h1>
         <label for="inputText">変換したい文字列</label>
-        <textarea id="inputText" placeholder="※テキストを入力"></textarea>
+        <input type="text" id="inputText" placeholder="※テキストを入力">
         
         <label for="shiftValue">ずらす数</label>
-        <input type="number" id="shiftValue" value="0">
+        <input type="number" id="shiftValue" placeholder="0">
         
         <label for="operation">操作</label>
         <select id="operation">
@@ -39,12 +21,11 @@
             <option value="decrypt">解読</option>
         </select>
         
-        <button onclick="transformText()">生成結果</button>
+        <button onclick="performOperation()">生成結果</button>
         
-        <label for="outputText">生成結果</label>
-        <textarea id="outputText" readonly></textarea>
+        <h2>生成結果</h2>
+        <div id="result"></div>
     </div>
-    
     <script src="script.js"></script>
 </body>
 </html>
