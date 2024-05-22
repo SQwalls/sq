@@ -80,7 +80,7 @@ input[type="text"], input[type="number"] {
   top: 0;
   width: 1em;
   white-space: nowrap;
-  color: #fff;
+  color: #77787B;
   animation: fall linear infinite;
 }
 
