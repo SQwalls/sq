@@ -310,3 +310,10 @@ input[type="text"], input[type="number"] {
     opacity: 0;
   }
 }
+
+/* スマホ画面の調整 */
+@media screen and (max-width: 767px) {
+  .terminal {
+    margin-top: 100px; /* ナビゲーションメニューの高さ分だけ下げる */
+  }
+}
