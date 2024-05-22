@@ -17,6 +17,21 @@
   transition: background-color 0.3s, color 0.3s;
 }
 
+#pasteButton, #deleteButton {
+  background-color: #444;
+  color: #fff;
+  border: 1px solid #0f0;
+  padding: 5px 10px;
+  cursor: pointer;
+  margin-right: 5px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+#pasteButton:hover, #deleteButton:hover {
+  background-color: #0f0;
+  color: #000;
+}
+
 /* 全体のスタイル */
 body {
   background-color: #000;

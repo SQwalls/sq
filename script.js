@@ -27,6 +27,8 @@ const reverseSmallMap = Object.fromEntries(Object.entries(smallMap).map(([k, v])
 
 let randomSeedEnabled = false;
 const randomSeedButton = document.getElementById('randomSeed');
+const pasteButton = document.getElementById('pasteButton');
+const deleteButton = document.getElementById('deleteButton');
 
 randomSeedButton.addEventListener('click', () => {
     randomSeedEnabled = !randomSeedEnabled;
@@ -41,6 +43,21 @@ document.getElementById('inputText').addEventListener('input', () => {
     if (randomSeedEnabled) {
         setRandomSeed();
     }
+    autoTransform();
+});
+
+pasteButton.addEventListener('click', async () => {
+    try {
+        const text = await navigator.clipboard.readText();
+        document.getElementById('inputText').value = text;
+        autoTransform();
+    } catch (err) {
+        console.error('Failed to read clipboard contents: ', err);
+    }
+});
+
+deleteButton.addEventListener('click', () => {
+    document.getElementById('inputText').value = '';
     autoTransform();
 });
 
@@ -168,7 +185,6 @@ function decrypt(text, shift) {
 
 function hackerEffect(finalText) {
     const resultElement = document.getElementById('result');
-    const originalText = resultElement.textContent;
     resultElement.textContent = finalText;
     resultElement.addEventListener('click', copyToClipboard);
     resultElement.style.cursor = 'pointer';
@@ -178,7 +194,7 @@ function hackerEffect(finalText) {
     let interval = 40; // milliseconds
     let displayText = finalText.split('');
     let randomText = displayText.map(() => characters.charAt(Math.floor(Math.random() * characters.length)));
-
+    
     let currentIteration = 0;
 
     let intervalId = setInterval(() => {
@@ -235,8 +251,8 @@ setInterval(shakeInputs, 5000);
 function flickerScreen() {
     const flicker = document.createElement('div');
     flicker.style.position = 'fixed';
-    flicker.style.top = '0';
-    flicker.style.left = '0';
+    flicker.style.top = 0;
+    flicker.style.left = 0;
     flicker.style.width = '100%';
     flicker.style.height = '100%';
     flicker.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
