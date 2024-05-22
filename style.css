@@ -283,6 +283,9 @@ input[type="text"], input[type="number"] {
   padding: 5px;
   width: 100%;
   box-sizing: border-box;
+  border-radius: 0; /* 角を丸めない */
+  -webkit-appearance: none; /* iOSのデフォルトスタイルを無効化 */
+  outline: none; /* フォーカス時の青い枠を削除 */
 }
 
 /* 結果表示エリアスタイル */
