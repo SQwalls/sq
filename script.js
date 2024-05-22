@@ -45,7 +45,7 @@ function decrypt(text, shift) {
         for (let i = 0; i < symbols.length; i++) {
             let index = symbols[i].indexOf(char);
             if (index !== -1) {
-                let shiftedIndex = (index - shiftValue + symbols[i].length) % symbols[i].length;
+                let shiftedIndex = (index - shiftValue + hiragana[i].length) % hiragana[i].length;
                 decryptedText += hiragana[i][shiftedIndex];
                 break;
             }
