@@ -5,6 +5,7 @@ body {
   font-family: 'Courier New', monospace;
   margin: 0;
   padding: 0;
+  overflow: hidden;
 }
 
 .terminal {
@@ -14,6 +15,8 @@ body {
   margin: 20px auto;
   max-width: 800px;
   padding: 20px;
+  position: relative;
+  z-index: 1;
 }
 
 .header {
@@ -58,6 +61,8 @@ input[type="text"], input[type="number"] {
 .info {
   color: #f00;
   font-weight: bold;
+  position: relative;
+  display: inline-block;
 }
 
 #matrix {
@@ -66,11 +71,39 @@ input[type="text"], input[type="number"] {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
-  color: #0f0;
-  font-size: 16px;
-  line-height: 16px;
-  font-family: 'Courier New', monospace;
   overflow: hidden;
-  z-index: -1;
+  z-index: 0;
+}
+
+.column {
+  position: absolute;
+  top: 0;
+  width: 1em;
+  white-space: nowrap;
+  color: #fff;
+  animation: fall linear infinite;
+}
+
+.letter {
+  display: block;
+  line-height: 0.5em; /* 行間を詰める */
+  animation: fade 3s infinite alternate;
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes fade {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }

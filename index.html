@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="icon.png"> 
   <title>BERLINWALL</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -13,15 +14,17 @@
       <span class="green">root@berlin:</span><span class="yellow">/decoder</span><span class="green">#</span>
     </div>
     <div class="content">
-      <p class="info">Oyasumi / Berlin All rights reserved.</p>
-      <label for="inputText" class="green">input:</label>
+      <p class="info" id="glitch-text">Oyasumi / Berlin All rights reserved.</p><br>
+      <label for="inputText" class="green">input:</label><br>
       <input type="text" id="inputText" placeholder="※テキストを入力" oninput="autoTransform()">
-      <label for="shiftValue" class="green">Seed:</label>
+      <label for="shiftValue" class="green">seed:</label>
       <input type="number" id="shiftValue" placeholder="0" oninput="autoTransform()">
       <h2 class="green">output:</h2>
       <div id="result" class="output"></div>
     </div>
   </div>
   <script src="script.js"></script>
+  <script src="matrix.js"></script>
+  <script src="glitch.js"></script>
 </body>
 </html>
