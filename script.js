@@ -19,19 +19,40 @@ for (const [key, value] of Object.entries(cipherTable)) {
     reverseCipherTable[value].push(key);
 }
 
-function shiftCharacter(char, shift) {
-    const values = reverseCipherTable[char];
-    if (!values) {
+function shiftCharacterEncrypt(char, shift) {
+    const values = Object.keys(cipherTable).filter(key => cipherTable[key] === char);
+    if (!values.length) {
         return char; // If character not found, return as is
     }
     const index = (values.length + shift) % values.length;
     return values[index];
 }
 
+function shiftCharacterDecrypt(char, shift) {
+    const values = reverseCipherTable[char];
+    if (!values) {
+        return char; // If character not found, return as is
+    }
+    const index = (values.length - shift + values.length) % values.length;
+    return values[index];
+}
+
 function transformText() {
     const inputText = document.getElementById('inputText').value;
     const shiftValue = parseInt(document.getElementById('shiftValue').value, 10);
-    const outputText = inputText.split('').map(char => shiftCharacter(char, shiftValue)).join('');
+    const operation = document.getElementById('operation').value;
+
+    let outputText;
+    if (operation === 'encrypt') {
+        outputText = inputText.split('').map(char => {
+            const mappedChar = cipherTable[char] || char;
+            return shiftCharacterEncrypt(mappedChar, shiftValue);
+        }).join('');
+    } else {
+        outputText = inputText.split('').map(char => shiftCharacterDecrypt(char, shiftValue)).join('');
+    }
+    
     document.getElementById('outputText').value = outputText;
 }
+
 
