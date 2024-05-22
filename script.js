@@ -9,9 +9,16 @@ const symbols = [
 
 function performOperation() {
     const inputText = document.getElementById('inputText').value;
-    const shiftValue = parseInt(document.getElementById('shiftValue').value, 10);
+    const shiftValue = document.getElementById('shiftValue').value;
     const operation = document.getElementById('operation').value;
-    const result = operation === 'encrypt' ? encrypt(inputText, shiftValue) : decrypt(inputText, shiftValue);
+
+    if (!shiftValue) {
+        document.getElementById('result').innerText = "Error: ずらす数を入力してください";
+        return;
+    }
+
+    const shift = parseInt(shiftValue, 10);
+    const result = operation === 'encrypt' ? encrypt(inputText, shift) : decrypt(inputText, shift);
     document.getElementById('result').innerText = result;
 }
 
@@ -21,7 +28,7 @@ function encrypt(text, shift) {
         for (let i = 0; i < hiragana.length; i++) {
             let index = hiragana[i].indexOf(char);
             if (index !== -1) {
-                let shiftedIndex = (index + shift) % symbols[i].length;
+                let shiftedIndex = (index + shift) % hiragana[i].length;
                 encryptedText += symbols[i][shiftedIndex];
                 break;
             }
