@@ -13,7 +13,7 @@
             max-width: 600px;
             margin: auto;
         }
-        textarea, input, button {
+        textarea, input, button, select {
             width: 100%;
             margin: 10px 0;
             padding: 10px;
@@ -33,6 +33,12 @@
         <label for="shiftValue">ずらす数</label>
         <input type="number" id="shiftValue" value="0">
         
+        <label for="operation">操作</label>
+        <select id="operation">
+            <option value="encrypt">暗号化</option>
+            <option value="decrypt">解読</option>
+        </select>
+        
         <button onclick="transformText()">生成結果</button>
         
         <label for="outputText">生成結果</label>
@@ -42,3 +48,4 @@
     <script src="script.js"></script>
 </body>
 </html>
+
