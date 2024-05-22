@@ -1,57 +1,23 @@
-const hiragana = [
-    "あいうえお", "かきくけこ", "さしすせそ", "たちつてと", "なにぬねの",
-    "はひふへほ", "まみむめも", "やゆよ", "らりるれろ", "わをん"
-];
-const symbols = [
-    "@#/&_","DoKtg", "AjTpM", "sGhVz", "NndxU",
-    "iLwvb", "JufkC", "Rqr", "BESeF", "%+<"
-];
-
-function performOperation() {
-    const inputText = document.getElementById('inputText').value;
-    const shiftValue = document.getElementById('shiftValue').value;
-    const operation = document.getElementById('operation').value;
-
-    if (!shiftValue) {
-        document.getElementById('result').innerText = "Error: ずらす数を入力してください";
-        return;
-    }
-
-    const shift = parseInt(shiftValue, 10);
-    const result = operation === 'encrypt' ? encrypt(inputText, shift) : decrypt(inputText, shift);
-    document.getElementById('result').innerText = result;
-}
-
-function encrypt(text, shift) {
-    let encryptedText = '';
-    for (let char of text) {
-        for (let i = 0; i < hiragana.length; i++) {
-            let index = hiragana[i].indexOf(char);
-            if (index !== -1) {
-                let shiftedIndex = (index + shift) % hiragana[i].length;
-                if (shiftedIndex < 0) shiftedIndex += hiragana[i].length;
-                encryptedText += symbols[i][shiftedIndex];
-                break;
-            }
-        }
-    }
-    return `${encryptedText}.${shift}`;
-}
-
-function decrypt(text, shift) {
-    let [encryptedText, shiftValue] = text.split('.');
-    shiftValue = parseInt(shiftValue, 10);
-    let decryptedText = '';
-    for (let char of encryptedText) {
-        for (let i = 0; i < symbols.length; i++) {
-            let index = symbols[i].indexOf(char);
-            if (index !== -1) {
-                let shiftedIndex = (index - shiftValue) % symbols[i].length;
-                if (shiftedIndex < 0) shiftedIndex += symbols[i].length;
-                decryptedText += hiragana[i][shiftedIndex];
-                break;
-            }
-        }
-    }
-    return decryptedText;
-}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>暗号変換サイト</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>暗号変換サイト</h1>
+        <label for="inputText">変換したい文字列</label>
+        <input type="text" id="inputText" placeholder="※テキストを入力" oninput="autoTransform()">
+        
+        <label for="shiftValue">Seed</label>
+        <input type="number" id="shiftValue" placeholder="0" oninput="autoTransform()">
+        
+        <h2>生成結果</h2>
+        <div id="result"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
