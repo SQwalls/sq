@@ -73,6 +73,10 @@ function decrypt(text, shift) {
 
 function hackerEffect(finalText) {
     const resultElement = document.getElementById('result');
+    resultElement.textContent = finalText;
+    resultElement.addEventListener('click', copyToClipboard);
+    resultElement.style.cursor = 'pointer';
+
     let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#/&_+%-<>=';
     let iterations = 10;
     let interval = 30; // milliseconds
@@ -90,13 +94,108 @@ function hackerEffect(finalText) {
             }
         });
 
-        resultElement.innerText = randomText.join('');
+        resultElement.textContent = randomText.join('');
 
         if (currentIteration >= iterations) {
             clearInterval(intervalId);
-            resultElement.innerText = finalText;
+            resultElement.textContent = finalText;
         }
 
         currentIteration++;
     }, interval);
+
+    let animationId;
+
+    function drawMatrix() {
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+        const width = canvas.width = window.innerWidth;
+        const height = canvas.height = window.innerHeight;
+        const cols = Math.floor(width / 20); // 列数の上限設定
+        const yuansu = [';', '/', '~', '?', '%', '#', '+', '=', '-', '_', '(', ')', '{', '}', '[', ']', '|'];
+
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        ctx.fillRect(0, 0, width, height);
+
+        ctx.fillStyle = '#0f0';
+        ctx.font = '20px monospace';
+
+        for (let i = 0; i < cols; i++) {
+            const text = Array(Math.floor(Math.random() * height / 20) + 10)
+                .fill()
+                .map(() => yuansu[Math.floor(Math.random() * yuansu.length)])
+                .join('');
+            ctx.fillText(text, i * 20, Math.random() * height);
+        }
+
+        animationId = requestAnimationFrame(drawMatrix);
+    }
+
+    function startMatrix() {
+        const canvas = document.getElementById('matrix');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        animationId = requestAnimationFrame(drawMatrix);
+    }
+
+    function stopMatrix() {
+        cancelAnimationFrame(animationId);
+    }
+
+    // ページ読み込み時にマトリックスを開始
+    window.addEventListener('load', startMatrix);
+
+    // リサイズ時にキャンバスのサイズを更新
+    window.addEventListener('resize', () => {
+        const canvas = document.getElementById('matrix');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    });
 }
+
+function copyToClipboard() {
+    const resultElement = document.getElementById('result');
+    const tempInput = document.createElement('textarea');
+    tempInput.value = resultElement.textContent;
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    document.execCommand('copy');
+    document.body.removeChild(tempInput);
+    alert('結果がクリップボードにコピーされました');
+}
+
+// 入力フォームの動き
+const inputText = document.getElementById('inputText');
+const shiftValue = document.getElementById('shiftValue');
+
+function shakeInputs() {
+  const randomX = Math.floor(Math.random() * 21) - 10;
+  const randomY = Math.floor(Math.random() * 21) - 10;
+  inputText.style.transform = `translate(${randomX}px, ${randomY}px)`;
+  shiftValue.style.transform = `translate(${randomX}px, ${randomY}px)`;
+  setTimeout(resetInputs, 100);
+}
+
+function resetInputs() {
+  inputText.style.transform = 'none';
+  shiftValue.style.transform = 'none';
+}
+
+setInterval(shakeInputs, 5000);
+
+// 画面のちらつき
+function flickerScreen() {
+  const flicker = document.createElement('div');
+  flicker.style.position = 'fixed';
+  flicker.style.top = '0';
+  flicker.style.left = '0';
+  flicker.style.width = '100%';
+  flicker.style.height = '100%';
+  flicker.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+flicker.style.zIndex = '9999';
+document.body.appendChild(flicker);
+setTimeout(() => {
+document.body.removeChild(flicker);
+}, 100);
+}
+setInterval(flickerScreen, 3000);
