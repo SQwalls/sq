@@ -1,25 +1,28 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>暗号変換サイト</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BERLINWALL</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>暗号変換サイト</h1>
-        <p>解読の際は、数字付きの暗号文を直接入れてください。例：_ir.0</p>
-        <p>濁点・半濁点に対応していないので使わないでください。例：ごはんですよ.0→こはんてすよ.0</p>
-        <label for="inputText">変換したい文字列</label>
-        <input type="text" id="inputText" placeholder="※テキストを入力" oninput="autoTransform()">
-        
-        <label for="shiftValue">Seed</label>
-        <input type="number" id="shiftValue" placeholder="0" oninput="autoTransform()">
-        
-        <h2>result:</h2>
-        <div id="result"></div>
+  <div id="matrix"></div> 
+  <div class="terminal">
+    <div class="header">
+      <span class="green">root@berlin:</span><span class="yellow">/decoder</span><span class="green">#</span>
     </div>
-    <script src="script.js"></script>
+    <div class="content">
+      <p class="info">解読の際は、数字付きの暗号文を直接入れてください。例：_ir.0</p>
+      <p class="info">濁点・半濁点に対応していません。例：がぎぐげご.0→かきくけこ.0</p>
+      <label for="inputText" class="green">文字列を入力:</label>
+      <input type="text" id="inputText" placeholder="※テキストを入力" oninput="autoTransform()">
+      <label for="shiftValue" class="green">Seed:</label>
+      <input type="number" id="shiftValue" placeholder="0" oninput="autoTransform()">
+      <h2 class="green">出力:</h2>
+      <div id="result" class="output"></div>
+    </div>
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>
