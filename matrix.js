@@ -1,14 +1,14 @@
 document.addEventListener('DOMContentLoaded', function () {
   const matrix = document.getElementById('matrix');
-  const columns = 80; // 列数
+  const columns = 50; // 列数を減らす
 
   for (let i = 0; i < columns; i++) {
     const column = document.createElement('div');
     column.classList.add('column');
-    column.style.left = `${i * 1.25}%`; // 調整して列が画面に収まるようにする
+    column.style.left = `${i * 2}%`; // 列間のスペースを広げる
     column.style.animationDuration = `${Math.random() * 5 + 5}s`;
 
-    const rows = Math.floor(Math.random() * 50) + 10; // 行数をランダムに設定（10から60の範囲）
+    const rows = Math.floor(Math.random() * 40) + 5; // 行数を減らす
 
     for (let j = 0; j < rows; j++) {
       const letter = document.createElement('div');
@@ -20,4 +20,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     matrix.appendChild(column);
   }
+
+  function animate() {
+    requestAnimationFrame(animate);
+  }
+
+  animate();
 });
