@@ -1,67 +1,76 @@
-/* 全体の背景とフォント */
+/* 全体のスタイル */
 body {
   background-color: #000;
   color: #0f0;
   font-family: 'Courier New', monospace;
+  margin: 0;
+  padding: 0;
 }
 
-/* ヘッダー */
-header {
-  text-align: center;
+.terminal {
+  background-color: rgba(0, 0, 0, 0.8);
+  border: 1px solid #0f0;
+  box-shadow: 0 0 10px #0f0;
+  margin: 20px auto;
+  max-width: 800px;
   padding: 20px;
-  border-bottom: 1px solid #0f0;
 }
 
-header h2 {
-  font-size: 36px;
+.header {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.green {
+  color: #0f0;
+}
+
+.yellow {
+  color: #ff0;
+}
+
+/* 見出しスタイル */
+h2 {
+  text-align: center;
   text-shadow: 0 0 10px #0f0;
 }
 
-/* メインコンテンツ */
-main {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-/* コードスタイル */
-code {
-  background-color: #333;
+/* 入力フォームスタイル */
+input[type="text"], input[type="number"] {
+  background-color: #000;
+  border: 1px solid #0f0;
   color: #0f0;
-  padding: 2px 4px;
-  border-radius: 4px;
+  padding: 5px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-pre {
-  background-color: #333;
+/* 結果表示エリアスタイル */
+.output {
+  background-color: #000;
+  border: 1px solid #0f0;
   color: #0f0;
   padding: 10px;
-  overflow-x: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
-/* リンクスタイル */
-a {
+.info {
+  color: #f00;
+  font-weight: bold;
+}
+
+#matrix {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
   color: #0f0;
-  text-decoration: none;
-}
-
-a:hover {
-  color: #fff;
-  text-shadow: 0 0 10px #0f0;
-}
-
-/* その他のスタイル */
-input, textarea {
-  background-color: #333;
-  color: #0f0;
-  border: 1px solid #0f0;
-  padding: 5px;
-}
-
-button {
-  background-color: #0f0;
-  color: #000;
-  border: none;
-  padding: 8px 16px;
-  cursor: pointer;
+  font-size: 16px;
+  line-height: 16px;
+  font-family: 'Courier New', monospace;
+  overflow: hidden;
+  z-index: -1;
 }
