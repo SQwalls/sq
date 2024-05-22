@@ -29,6 +29,7 @@ function encrypt(text, shift) {
             let index = hiragana[i].indexOf(char);
             if (index !== -1) {
                 let shiftedIndex = (index + shift) % hiragana[i].length;
+                if (shiftedIndex < 0) shiftedIndex += hiragana[i].length;
                 encryptedText += symbols[i][shiftedIndex];
                 break;
             }
@@ -45,7 +46,8 @@ function decrypt(text, shift) {
         for (let i = 0; i < symbols.length; i++) {
             let index = symbols[i].indexOf(char);
             if (index !== -1) {
-                let shiftedIndex = (index - shiftValue + hiragana[i].length) % hiragana[i].length;
+                let shiftedIndex = (index - shiftValue) % symbols[i].length;
+                if (shiftedIndex < 0) shiftedIndex += symbols[i].length;
                 decryptedText += hiragana[i][shiftedIndex];
                 break;
             }
