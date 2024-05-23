@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
     column.classList.add('column');
     column.style.left = `${i * columnWidth}px`; // 列の位置を設定
 
-    const rows = Math.floor(Math.random() * 80) + 20;
+    const rows = Math.floor(Math.random() * 120) + 40;
 
     for (let j = 0; j < rows; j++) {
       const letter = document.createElement('div');
