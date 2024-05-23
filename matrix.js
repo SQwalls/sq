@@ -1,35 +1,25 @@
 document.addEventListener('DOMContentLoaded', function () {
   const matrix = document.getElementById('matrix');
-  matrix.style.fontSize = '12px';
-  matrix.style.fontFamily = 'monospace';
-  matrix.style.color = '#00ff00';
+  const columns = 80; // 列数
 
-  const containerWidth = matrix.offsetWidth; // 親要素の幅を取得
-  const columnWidth = 12; // 列の幅をピクセル単位で指定
-  const columns = Math.floor(containerWidth / columnWidth); // 列数を計算
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:\'",.<>?/`~'; // 追加する文字
 
   for (let i = 0; i < columns; i++) {
     const column = document.createElement('div');
     column.classList.add('column');
-    column.style.left = `${i * columnWidth}px`; // 列の位置を設定
+    column.style.left = `${i * 1.25}%`; // 調整して列が画面に収まるようにする
+    column.style.animationDuration = `${Math.random() * 5 + 5}s`;
 
-    const rows = Math.floor(Math.random() * 120) + 40;
+    const rows = Math.floor(Math.random() * 50) + 10; // 行数をランダムに設定（10から60の範囲）
 
     for (let j = 0; j < rows; j++) {
       const letter = document.createElement('div');
       letter.classList.add('letter');
-      letter.textContent = String.fromCharCode(33 + Math.floor(Math.random() * 94));
-      letter.style.animationDelay = `${Math.random() * 5}s`;
-
+      const randomChar = characters.charAt(Math.floor(Math.random() * characters.length)); // ランダムな文字を生成
+      letter.textContent = randomChar;
+      letter.style.animationDelay = `${Math.random() * 3}s`;
       column.appendChild(letter);
     }
-
     matrix.appendChild(column);
   }
-
-  function animate() {
-    requestAnimationFrame(animate);
-  }
-
-  animate();
 });
