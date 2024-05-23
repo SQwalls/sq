@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const column = document.createElement('div');
     column.classList.add('column');
     column.style.left = `${i * 2}%`; // 列間のスペースを広げる
-    column.style.animationDuration = `${Math.random() * 5 + 5}s`;
+    column.style.animationDuration = `${Math.random() * 10 + 5}s`; // 雨の落下速度をランダム化
 
     const rows = Math.floor(Math.random() * 40) + 5; // 行数を減らす
 
