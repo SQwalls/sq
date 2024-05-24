@@ -26,6 +26,18 @@ const OBJECT_CATEGORIES = {
   BUBBLE_PENDING: 0x0004,
 };
 
+// 効果音を再生するための関数
+function playSound(src) {
+  const sound = new Audio(src);
+  sound.play();
+}
+
+// バブルが落下したときの効果音
+const dropSound = './sounds/drop.mp3';
+
+// バブルがくっついてサイズが変わるときの効果音
+const mergeSound = './sounds/merge.mp3';
+
 class BubbleGame {
   constructor(container, message, scoreChangeCallBack) {
     this.message = message;
@@ -128,7 +140,8 @@ class BubbleGame {
     setTimeout(() => {
       this.cooldown = false; // クールタイムを解除
       this.addBubble();
-    }, 100); // 0.1秒のクールタイム
+    }, 300); // 0.3秒のクールタイム
+    playSound(dropSound); // バブルが落下したときの効果音を再生
   }
 
   handleCollision(event) {
@@ -161,6 +174,7 @@ class BubbleGame {
           Composite.remove(this.engine.world, [bodyA, bodyB]);
           Composite.add(this.engine.world, [newBubble]);
           this.setScore(this.score + newLevel + 1);
+          playSound(mergeSound); // バブルがくっついてサイズが変わるときの効果音を再生
         }
       }
     });
@@ -199,7 +213,7 @@ class BubbleGame {
     setTimeout(() => {
       this.cooldown = false; // クールタイムを解除
       this.addBubble();
-    }, 100); // 0.1秒のクールタイム
+    }, 300); // 1秒のクールタイム
   }
 
   addPendingBubble(x, y) {
