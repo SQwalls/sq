@@ -174,17 +174,19 @@ class BubbleGame {
 
   handleTouchMove(e) {
     e.preventDefault();
-    if (!this.currentBubble || this.gameover || Body.isStatic(this.currentBubble)) return;
+    if (e.touches.length > 1 || !this.currentBubble || this.gameover || Body.isStatic(this.currentBubble)) return;
     this.removePendingBubble();
     const touch = e.touches[0];
     const { clientX } = touch;
     const currentBubbleRadius = Number(this.currentBubble.label.substring(7)) * 20 + 10;
     const newX = Math.max(Math.min(clientX - container.offsetLeft, WIDTH - 10 - currentBubbleRadius), 10 + currentBubbleRadius);
     this.addPendingBubble(newX, 50); // Y座標を固定値(50)にする
+    Body.setPosition(this.currentBubble, { x: newX, y: this.currentBubble.position.y });
+    this.defaultX = newX;
   }
 
   handleTouchEnd(e) {
-    if (!this.currentBubble || this.gameover) return;
+    if (e.touches.length > 1 || !this.currentBubble || this.gameover) return;
     Body.setStatic(this.currentBubble, true);
     this.currentBubble = undefined;
     this.removePendingBubble();
