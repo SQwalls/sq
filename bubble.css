@@ -1,0 +1,106 @@
+/* index.css */
+body {
+  background-color: #000;
+  color: #0f0;
+  font-family: 'Courier New', monospace;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.hacker-terminal {
+  background-color: rgba(0, 0, 0, 0.8);
+  border: 1px solid #0f0;
+  box-shadow: 0 0 10px #0f0;
+  padding: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.hacker-header {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.green {
+  color: #0f0;
+}
+
+.yellow {
+  color: #ff0;
+}
+
+.container {
+  position: relative;
+  width: 800px;
+  height: 1200px;
+  margin: 0 auto;
+}
+
+.message {
+  position: absolute;
+  display: none;
+  text-align: center;
+  top: 200px;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 0 0 30px;
+  border: 1px solid #0f0;
+  box-shadow: 0 0 10px #0f0;
+}
+
+.bubble {
+  border-radius: 100%;
+  overflow: hidden;
+}
+
+.message p {
+  margin: 0px;
+}
+
+.mainText {
+  font-size: 32px;
+  color: #0f0;
+  text-shadow: 0 0 10px #0f0;
+}
+
+.subText {
+  font-size: 24px;
+  color: #0f0;
+  text-shadow: 0 0 10px #0f0;
+}
+
+.button {
+  width: 150px;
+  height: 40px;
+  font-size: 16px;
+  background-color: #000;
+  color: #0f0;
+  border: 1px solid #0f0;
+  box-shadow: 0 0 10px #0f0;
+  cursor: pointer;
+}
+
+.score-container {
+  width: 800px;
+  margin: 10px auto;
+  text-align: center;
+}
+
+.score {
+  font-size: 24px;
+  text-shadow: 0 0 10px #0f0;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.controls .button {
+  margin: 0 10px;
+}
