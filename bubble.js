@@ -128,7 +128,7 @@ class BubbleGame {
     setTimeout(() => {
       this.cooldown = false; // クールタイムを解除
       this.addBubble();
-    }, 300); // 0.3秒のクールタイム
+    }, 100); // 0.1秒のクールタイム
   }
 
   handleCollision(event) {
