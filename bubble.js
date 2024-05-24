@@ -31,6 +31,7 @@ class BubbleGame {
     this.message = message;
     this.scoreChangeCallBack = scoreChangeCallBack;
     this.engine = Engine.create({ constraintIterations: 3 });
+    this.cooldown = false; // クールタイムの初期化
 
     this.render = Render.create({
       element: container,
@@ -117,13 +118,17 @@ class BubbleGame {
   }
 
   handleClick(e) {
-    if (!this.currentBubble || this.gameover) return;
+    if (!this.currentBubble || this.gameover || this.cooldown) return; // クールタイムをチェック
     Body.setStatic(this.currentBubble, true);
     this.currentBubble = undefined;
     this.removePendingBubble();
     const x = e.offsetX || e.touches[0].pageX - e.target.offsetLeft;
     this.defaultX = x;
-    this.addBubble();
+    this.cooldown = true; // クールタイムを設定
+    setTimeout(() => {
+      this.cooldown = false; // クールタイムを解除
+      this.addBubble();
+    }, 300); // 0.3秒のクールタイム
   }
 
   handleCollision(event) {
@@ -174,25 +179,27 @@ class BubbleGame {
 
   handleTouchMove(e) {
     e.preventDefault();
-    if (e.touches.length > 1 || !this.currentBubble || this.gameover || Body.isStatic(this.currentBubble)) return;
+    if (!this.currentBubble || this.gameover || Body.isStatic(this.currentBubble)) return;
     this.removePendingBubble();
     const touch = e.touches[0];
     const { clientX } = touch;
     const currentBubbleRadius = Number(this.currentBubble.label.substring(7)) * 20 + 10;
     const newX = Math.max(Math.min(clientX - container.offsetLeft, WIDTH - 10 - currentBubbleRadius), 10 + currentBubbleRadius);
     this.addPendingBubble(newX, 50); // Y座標を固定値(50)にする
-    Body.setPosition(this.currentBubble, { x: newX, y: this.currentBubble.position.y });
-    this.defaultX = newX;
   }
 
   handleTouchEnd(e) {
-    if (e.touches.length > 1 || !this.currentBubble || this.gameover) return;
+    if (!this.currentBubble || this.gameover || this.cooldown) return; // クールタイムをチェック
     Body.setStatic(this.currentBubble, true);
     this.currentBubble = undefined;
     this.removePendingBubble();
     const x = e.changedTouches[0].pageX - e.target.offsetLeft;
     this.defaultX = x;
-    this.addBubble();
+    this.cooldown = true; // クールタイムを設定
+    setTimeout(() => {
+      this.cooldown = false; // クールタイムを解除
+      this.addBubble();
+    }, 1000); // 1秒のクールタイム
   }
 
   addPendingBubble(x, y) {
