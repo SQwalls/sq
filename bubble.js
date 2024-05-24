@@ -199,7 +199,7 @@ class BubbleGame {
     setTimeout(() => {
       this.cooldown = false; // クールタイムを解除
       this.addBubble();
-    }, 1000); // 1秒のクールタイム
+    }, 100); // 0.1秒のクールタイム
   }
 
   addPendingBubble(x, y) {
