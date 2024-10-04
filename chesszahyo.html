@@ -218,9 +218,9 @@
                     square.classList.add('square');
                     
                     if ((rank + file) % 2 === 0) {
-                        square.classList.add('white');
-                    } else {
                         square.classList.add('black');
+                    } else {
+                        square.classList.add('white');
                     }
 
                     const coordinate = getCoordinate(file, rank);
