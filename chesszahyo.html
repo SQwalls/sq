@@ -3,48 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>チェス座標学習ゲーム</title>
+    <title>チェス座標学習パズル</title>
     <style>
         body {
+            font-family: 'Georgia', serif;
+            background-color: #f9e7c5;
+            color: #4a3420;
             display: flex;
             flex-direction: column;
             align-items: center;
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            transition: background-color 0.5s;
+            padding: 20px;
+            margin: 0;
         }
 
         h1 {
-            color: #333;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #632810;
+            text-shadow: 1px 1px 2px #d4a76a;
+        }
+
+        #game-container {
+            background-color: #fff9e6;
+            border: 4px solid #8c6239;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            max-width: 100%;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         #chessboard {
             display: grid;
-            grid-template-columns: repeat(8, 60px);
-            grid-template-rows: repeat(8, 60px);
-            border: 2px solid #333;
-            margin: 20px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.2);
-            transition: transform 0.3s;
-        }
-
-        #chessboard:hover {
-            transform: scale(1.02);
+            grid-template-columns: repeat(8, 1fr);
+            grid-template-rows: repeat(8, 1fr);
+            gap: 1px;
+            margin: 20px auto;
+            border: 3px solid #8c6239;
+            background-color: #8c6239;
+            max-width: 400px;
+            width: 100%;
+            aspect-ratio: 1 / 1;
         }
 
         .square {
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 36px;
+            font-size: 24px;
             cursor: pointer;
             transition: all 0.3s;
             position: relative;
         }
 
         .square:hover {
-            opacity: 0.8;
+            transform: scale(1.05);
         }
 
         .square.white {
@@ -65,88 +80,63 @@
             to { transform: scale(1.05); }
         }
 
-        .coordinate-label {
+        .coordinate-label, .piece-coordinate {
+            font-size: 10px;
             position: absolute;
-            bottom: 2px;
-            right: 2px;
-            font-size: 12px;
-            color: #666;
+            color: #4a3420;
             opacity: 0;
             transition: opacity 0.3s;
         }
 
-        .show-coordinates .coordinate-label {
+        .coordinate-label {
+            bottom: 2px;
+            right: 2px;
+        }
+
+        .piece-coordinate {
+            top: 2px;
+            left: 2px;
+        }
+
+        .show-coordinates .coordinate-label,
+        .show-coordinates .piece-coordinate {
             opacity: 1;
         }
 
         #message {
-            font-size: 24px;
-            margin: 20px;
+            font-size: 18px;
+            margin: 20px 0;
             min-height: 30px;
             text-align: center;
-            color: #333;
-            transition: all 0.3s;
+            color: #632810;
         }
 
-        #button-panel {
-            display: flex;
-            gap: 10px;
-            margin: 20px;
-        }
-
-        .control-button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            transition: all 0.3s;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-
-        .control-button:hover {
-            background-color: #45a049;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-
-        .control-button:active {
-            transform: translateY(0);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-        }
-
-        .choice-button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            background-color: #2196F3;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            margin: 5px;
-            transition: all 0.3s;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-
-        .choice-button:hover {
-            background-color: #1976D2;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-
-        .choice-button:active {
-            transform: translateY(0);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-        }
-
-        #choices {
+        #button-panel, #choices {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
             gap: 10px;
-            margin: 20px;
+            margin: 20px 0;
+        }
+
+        .control-button, .choice-button {
+            font-family: 'Georgia', serif;
+            padding: 10px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            background-color: #d4a76a;
+            color: #4a3420;
+            border: 2px solid #8c6239;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .control-button:hover, .choice-button:hover {
+            background-color: #e6c395;
+        }
+
+        .choice-button {
+            min-width: 60px;
         }
 
         @keyframes fadeIn {
@@ -154,44 +144,50 @@
             to { opacity: 1; }
         }
 
-        @keyframes slideIn {
-            from { transform: translateY(-20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
         .fade-in {
             animation: fadeIn 0.5s ease-out;
         }
 
-        .slide-in {
-            animation: slideIn 0.5s ease-out;
-        }
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
 
-        .piece-coordinate {
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            font-size: 12px;
-            color: #666;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
+            h1 {
+                font-size: 24px;
+            }
 
-        .show-coordinates .piece-coordinate {
-            opacity: 1;
+            #game-container {
+                padding: 10px;
+            }
+
+            .square {
+                font-size: 18px;
+            }
+
+            .coordinate-label, .piece-coordinate {
+                font-size: 8px;
+            }
+
+            .control-button, .choice-button {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
         }
     </style>
 </head>
 <body>
-    <h1 class="slide-in">チェス座標学習ゲーム</h1>
-    <div id="button-panel">
-        <button class="control-button fade-in" id="toggleCoordinates">座標表示/非表示</button>
-        <button class="control-button fade-in" id="toggleColor">視点切替（白/黒）</button>
-        <button class="control-button fade-in" id="showAnswer">答えを見る</button>
+    <div id="game-container">
+        <h1>チェス座標学習パズル</h1>
+        <div id="button-panel">
+            <button class="control-button fade-in" id="toggleCoordinates">座標表示/非表示</button>
+            <button class="control-button fade-in" id="toggleColor">視点切替（白/黒）</button>
+            <button class="control-button fade-in" id="showAnswer">答えを見る</button>
+        </div>
+        <div id="chessboard" class="fade-in"></div>
+        <div id="message" class="fade-in"></div>
+        <div id="choices" class="fade-in"></div>
     </div>
-    <div id="chessboard" class="fade-in"></div>
-    <div id="message" class="fade-in"></div>
-    <div id="choices" class="fade-in"></div>
 
     <script>
         const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
@@ -221,7 +217,7 @@
                     const square = document.createElement('div');
                     square.classList.add('square');
                     
-                    if ((rank + file) % 2 === 1) {
+                    if ((rank + file) % 2 === 0) {
                         square.classList.add('white');
                     } else {
                         square.classList.add('black');
@@ -283,16 +279,13 @@
                 type: Math.random() < 0.5 ? 'click' : 'choice'
             };
 
-            // すべてのハイライトを削除
             squares.forEach(square => square.classList.remove('highlighted'));
 
             if (currentQuestion.type === 'click') {
                 showQuestionMessage(`座標 ${currentQuestion.answer} をクリックしてください。`);
                 document.getElementById('choices').innerHTML = '';
-                // クリック問題ではハイライトしない
             } else {
                 generateChoices(currentQuestion.answer);
-                // 3択問題の場合のみ、問題のマスをハイライト
                 targetSquare.classList.add('highlighted');
             }
         }
@@ -321,11 +314,11 @@
                 button.textContent = choice;
                 button.addEventListener('click', () => {
                     if (choice === correct) {
-                        button.style.backgroundColor = '#4CAF50';
+                        button.style.backgroundColor = '#90EE90';
                         showSuccessMessage();
                         setTimeout(resetGame, 1500);
                     } else {
-                        button.style.backgroundColor = '#f44336';
+                        button.style.backgroundColor = '#FFB6C1';
                         showErrorMessage();
                     }
                 });
@@ -338,7 +331,7 @@
                 square.classList.remove('highlighted');
             });
             document.querySelectorAll('.choice-button').forEach(button => {
-                button.style.backgroundColor = '#2196F3';
+                button.style.backgroundColor = '#d4a76a';
             });
             generateQuestion();
         }
@@ -352,11 +345,11 @@
         }
 
         function showSuccessMessage() {
-            showMessage('正解です！', 'success');
+            showMessage('正解です！素晴らしい推理力ですね。', 'success');
         }
 
         function showErrorMessage() {
-            showMessage('不正解です。もう一度試してください。', 'error');
+            showMessage('惜しい！もう一度よく考えてみましょう。', 'error');
         }
 
         function showMessage(text, type) {
@@ -367,13 +360,13 @@
             messageElement.classList.add('fade-in');
 
             if (type === 'success') {
-                document.body.style.backgroundColor = '#e6ffe6';
+                messageElement.style.color = '#006400';
             } else if (type === 'error') {
-                document.body.style.backgroundColor = '#ffe6e6';
+                messageElement.style.color = '#8B0000';
             }
 
             setTimeout(() => {
-                document.body.style.backgroundColor = '#f0f0f0';
+                messageElement.style.color = '#632810';
                 if (type === 'error') {
                     if (currentQuestion.type === 'click') {
                         showQuestionMessage(`座標 ${currentQuestion.answer} をクリックしてください。`);
@@ -381,7 +374,7 @@
                         showQuestionMessage('ハイライトされたマスの座標を選んでください：');
                     }
                 }
-            }, 1000);
+            }, 1500);
         }
 
         document.getElementById('toggleCoordinates').addEventListener('click', () => {
@@ -403,12 +396,12 @@
                     const choiceButtons = document.querySelectorAll('.choice-button');
                     choiceButtons.forEach(button => {
                         if (button.textContent === currentQuestion.answer) {
-                            button.style.backgroundColor = '#4CAF50';
+                            button.style.backgroundColor = '#90EE90';
                         }
                     });
-                    showMessage(`正解は ${currentQuestion.answer} です。`, 'success');
+                    showMessage(`正解は ${currentQuestion.answer} です。よく観察してみましょう。`, 'success');
                 } else {
-                    showMessage(`正解のマス（${currentQuestion.answer}）をハイライトしました。`, 'success');
+                    showMessage(`正解のマス（${currentQuestion.answer}）をハイライトしました。次は自力で解けるはずです！`, 'success');
                 }
             }
         });
