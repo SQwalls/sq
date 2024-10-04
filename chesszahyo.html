@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>チェス座標学習ゲーム</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            transition: background-color 0.5s;
+        }
+
+        h1 {
+            color: #333;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        #chessboard {
+            display: grid;
+            grid-template-columns: repeat(8, 60px);
+            grid-template-rows: repeat(8, 60px);
+            border: 2px solid #333;
+            margin: 20px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+
+        #chessboard:hover {
+            transform: scale(1.02);
+        }
+
+        .square {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 36px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .square:hover {
+            opacity: 0.8;
+        }
+
+        .square.white {
+            background-color: #f0d9b5;
+        }
+
+        .square.black {
+            background-color: #b58863;
+        }
+
+        .square.highlighted {
+            background-color: #ffff99;
+            animation: pulse 1s infinite alternate;
+        }
+
+        @keyframes pulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.05); }
+        }
+
+        .coordinate-label {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            font-size: 12px;
+            color: #666;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .show-coordinates .coordinate-label {
+            opacity: 1;
+        }
+
+        #message {
+            font-size: 24px;
+            margin: 20px;
+            min-height: 30px;
+            text-align: center;
+            color: #333;
+            transition: all 0.3s;
+        }
+
+        #button-panel {
+            display: flex;
+            gap: 10px;
+            margin: 20px;
+        }
+
+        .control-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .control-button:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .control-button:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        .choice-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin: 5px;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .choice-button:hover {
+            background-color: #1976D2;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .choice-button:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        #choices {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .slide-in {
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .piece-coordinate {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            font-size: 12px;
+            color: #666;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .show-coordinates .piece-coordinate {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="slide-in">チェス座標学習ゲーム</h1>
+    <div id="button-panel">
+        <button class="control-button fade-in" id="toggleCoordinates">座標表示/非表示</button>
+        <button class="control-button fade-in" id="toggleColor">視点切替（白/黒）</button>
+        <button class="control-button fade-in" id="showAnswer">答えを見る</button>
+    </div>
+    <div id="chessboard" class="fade-in"></div>
+    <div id="message" class="fade-in"></div>
+    <div id="choices" class="fade-in"></div>
+
+    <script>
+        const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+        const ranks = ['1', '2', '3', '4', '5', '6', '7', '8'];
+        let playerSideWhite = true;
+        let currentQuestion = null;
+        
+        const pieces = {
+            white: ['♖', '♘', '♗', '♕', '♔', '♗', '♘', '♖', '♙', '♙', '♙', '♙', '♙', '♙', '♙', '♙'],
+            black: ['♜', '♞', '♝', '♛', '♚', '♝', '♞', '♜', '♟', '♟', '♟', '♟', '♟', '♟', '♟', '♟']
+        };
+
+        function getCoordinate(file, rank) {
+            if (playerSideWhite) {
+                return `${files[file]}${rank + 1}`;
+            } else {
+                return `${files[7-file]}${8-rank}`;
+            }
+        }
+
+        function generateBoard() {
+            const chessboard = document.getElementById('chessboard');
+            chessboard.innerHTML = '';
+
+            for (let rank = 7; rank >= 0; rank--) {
+                for (let file = 0; file < 8; file++) {
+                    const square = document.createElement('div');
+                    square.classList.add('square');
+                    
+                    if ((rank + file) % 2 === 1) {
+                        square.classList.add('white');
+                    } else {
+                        square.classList.add('black');
+                    }
+
+                    const coordinate = getCoordinate(file, rank);
+                    square.dataset.coordinate = coordinate;
+
+                    const label = document.createElement('span');
+                    label.classList.add('coordinate-label');
+                    label.textContent = coordinate;
+                    square.appendChild(label);
+
+                    let piece = '';
+                    if (playerSideWhite) {
+                        if (rank === 7) piece = pieces.black[file];
+                        if (rank === 6) piece = pieces.black[file + 8];
+                        if (rank === 1) piece = pieces.white[file + 8];
+                        if (rank === 0) piece = pieces.white[file];
+                    } else {
+                        if (rank === 7) piece = pieces.white[7-file];
+                        if (rank === 6) piece = pieces.white[15-file];
+                        if (rank === 1) piece = pieces.black[15-file];
+                        if (rank === 0) piece = pieces.black[7-file];
+                    }
+
+                    if (piece) {
+                        square.innerHTML = piece;
+                        const pieceLabel = document.createElement('span');
+                        pieceLabel.classList.add('piece-coordinate');
+                        pieceLabel.textContent = coordinate;
+                        square.appendChild(pieceLabel);
+                    }
+
+                    square.addEventListener('click', () => handleSquareClick(square));
+                    chessboard.appendChild(square);
+                }
+            }
+        }
+
+        function handleSquareClick(square) {
+            if (!currentQuestion || currentQuestion.type !== 'click') return;
+            
+            if (square.dataset.coordinate === currentQuestion.answer) {
+                square.classList.add('highlighted');
+                showSuccessMessage();
+                setTimeout(resetGame, 1500);
+            } else {
+                showErrorMessage();
+            }
+        }
+
+        function generateQuestion() {
+            const squares = Array.from(document.querySelectorAll('.square'));
+            const targetSquare = squares[Math.floor(Math.random() * squares.length)];
+            
+            currentQuestion = {
+                answer: targetSquare.dataset.coordinate,
+                type: Math.random() < 0.5 ? 'click' : 'choice'
+            };
+
+            // すべてのハイライトを削除
+            squares.forEach(square => square.classList.remove('highlighted'));
+
+            if (currentQuestion.type === 'click') {
+                showQuestionMessage(`座標 ${currentQuestion.answer} をクリックしてください。`);
+                document.getElementById('choices').innerHTML = '';
+                // クリック問題ではハイライトしない
+            } else {
+                generateChoices(currentQuestion.answer);
+                // 3択問題の場合のみ、問題のマスをハイライト
+                targetSquare.classList.add('highlighted');
+            }
+        }
+
+        function generateChoices(correct) {
+            const squares = Array.from(document.querySelectorAll('.square'));
+            let choices = [correct];
+            
+            while (choices.length < 3) {
+                const randomSquare = squares[Math.floor(Math.random() * squares.length)];
+                const coordinate = randomSquare.dataset.coordinate;
+                if (!choices.includes(coordinate)) {
+                    choices.push(coordinate);
+                }
+            }
+
+            choices.sort(() => Math.random() - 0.5);
+
+            const choicesDiv = document.getElementById('choices');
+            choicesDiv.innerHTML = '';
+            showQuestionMessage('ハイライトされたマスの座標を選んでください：');
+
+            choices.forEach(choice => {
+                const button = document.createElement('button');
+                button.classList.add('choice-button', 'fade-in');
+                button.textContent = choice;
+                button.addEventListener('click', () => {
+                    if (choice === correct) {
+                        button.style.backgroundColor = '#4CAF50';
+                        showSuccessMessage();
+                        setTimeout(resetGame, 1500);
+                    } else {
+                        button.style.backgroundColor = '#f44336';
+                        showErrorMessage();
+                    }
+                });
+                choicesDiv.appendChild(button);
+            });
+        }
+
+        function resetGame() {
+            document.querySelectorAll('.square').forEach(square => {
+                square.classList.remove('highlighted');
+            });
+            document.querySelectorAll('.choice-button').forEach(button => {
+                button.style.backgroundColor = '#2196F3';
+            });
+            generateQuestion();
+        }
+
+        function showQuestionMessage(text) {
+            const messageElement = document.getElementById('message');
+            messageElement.textContent = text;
+            messageElement.classList.remove('fade-in');
+            void messageElement.offsetWidth;
+            messageElement.classList.add('fade-in');
+        }
+
+        function showSuccessMessage() {
+            showMessage('正解です！', 'success');
+        }
+
+        function showErrorMessage() {
+            showMessage('不正解です。もう一度試してください。', 'error');
+        }
+
+        function showMessage(text, type) {
+            const messageElement = document.getElementById('message');
+            messageElement.textContent = text;
+            messageElement.classList.remove('fade-in');
+            void messageElement.offsetWidth;
+            messageElement.classList.add('fade-in');
+
+            if (type === 'success') {
+                document.body.style.backgroundColor = '#e6ffe6';
+            } else if (type === 'error') {
+                document.body.style.backgroundColor = '#ffe6e6';
+            }
+
+            setTimeout(() => {
+                document.body.style.backgroundColor = '#f0f0f0';
+                if (type === 'error') {
+                    if (currentQuestion.type === 'click') {
+                        showQuestionMessage(`座標 ${currentQuestion.answer} をクリックしてください。`);
+                    } else {
+                        showQuestionMessage('ハイライトされたマスの座標を選んでください：');
+                    }
+                }
+            }, 1000);
+        }
+
+        document.getElementById('toggleCoordinates').addEventListener('click', () => {
+            document.getElementById('chessboard').classList.toggle('show-coordinates');
+        });
+
+        document.getElementById('toggleColor').addEventListener('click', () => {
+            playerSideWhite = !playerSideWhite;
+            generateBoard();
+            generateQuestion();
+        });
+
+        document.getElementById('showAnswer').addEventListener('click', () => {
+            if (currentQuestion) {
+                const correctSquare = document.querySelector(`[data-coordinate="${currentQuestion.answer}"]`);
+                correctSquare.classList.add('highlighted');
+
+                if (currentQuestion.type === 'choice') {
+                    const choiceButtons = document.querySelectorAll('.choice-button');
+                    choiceButtons.forEach(button => {
+                        if (button.textContent === currentQuestion.answer) {
+                            button.style.backgroundColor = '#4CAF50';
+                        }
+                    });
+                    showMessage(`正解は ${currentQuestion.answer} です。`, 'success');
+                } else {
+                    showMessage(`正解のマス（${currentQuestion.answer}）をハイライトしました。`, 'success');
+                }
+            }
+        });
+
+        generateBoard();
+        generateQuestion();
+    </script>
+</body>
+</html>
