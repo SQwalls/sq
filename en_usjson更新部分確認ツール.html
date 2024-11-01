@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>en_us.json更新部分確認ツール</title>
+</head>
+<body>
+    <h1>en_us.json更新部分確認ツール</h1>
+    <form>
+        <label>ファイル1:</label>
+        <input type="file" id="file1" accept=".json"><br><br>
+        <label>ファイル2:</label>
+        <input type="file" id="file2" accept=".json"><br><br>
+        <button type="button" onclick="compareFiles()">比較する</button>
+    </form>
+    <h2>結果</h2>
+    <div id="result"></div>
+
+    <script>
+        async function compareFiles() {
+            console.log("compareFiles function called");  // デバッグ用ログ
+            
+            const file1 = document.getElementById('file1').files[0];
+            const file2 = document.getElementById('file2').files[0];
+            
+            if (!file1 || !file2) {
+                alert("2つのファイルを選択してください。");
+                return;
+            }
+
+            const content1 = await file1.text();
+            const content2 = await file2.text();
+
+            console.log("File 1 content:", content1);  // デバッグ用
+            console.log("File 2 content:", content2);  // デバッグ用
+
+            let json1, json2;
+            try {
+                json1 = JSON.parse(content1);
+                json2 = JSON.parse(content2);
+            } catch (error) {
+                console.error("JSONのパースに失敗しました:", error);
+                alert("ファイルが正しいJSON形式ではありません。");
+                return;
+            }
+
+            const result = compareJSON(json1, json2);
+            displayResult(result);
+        }
+
+        function compareJSON(json1, json2) {
+            const diff = {
+                onlyInFile1: [],
+                onlyInFile2: [],
+                differentValues: []
+            };
+
+            for (const key in json1) {
+                if (json2.hasOwnProperty(key)) {
+                    if (json1[key] !== json2[key]) {
+                        diff.differentValues.push({ key: key, file1Value: json1[key], file2Value: json2[key] });
+                    }
+                } else {
+                    diff.onlyInFile1.push({ key: key, value: json1[key] });
+                }
+            }
+
+            for (const key in json2) {
+                if (!json1.hasOwnProperty(key)) {
+                    diff.onlyInFile2.push({ key: key, value: json2[key] });
+                }
+            }
+
+            return diff;
+        }
+
+        function displayResult(result) {
+            const resultDiv = document.getElementById("result");
+            resultDiv.innerHTML = "";  // 初期化
+
+            if (result.onlyInFile1.length === 0 && result.onlyInFile2.length === 0 && result.differentValues.length === 0) {
+                resultDiv.innerHTML = "<p>両ファイルは同一です。</p>";
+                return;
+            }
+
+            if (result.onlyInFile1.length > 0) {
+                resultDiv.innerHTML += "<h3>ファイル1にのみ存在するエントリ</h3><ul>";
+                result.onlyInFile1.forEach(item => {
+                    resultDiv.innerHTML += `<li>${item.key}: ${item.value}</li>`;
+                });
+                resultDiv.innerHTML += "</ul>";
+            }
+
+            if (result.onlyInFile2.length > 0) {
+                resultDiv.innerHTML += "<h3>ファイル2にのみ存在するエントリ</h3><ul>";
+                result.onlyInFile2.forEach(item => {
+                    resultDiv.innerHTML += `<li>${item.key}: ${item.value}</li>`;
+                });
+                resultDiv.innerHTML += "</ul>";
+            }
+
+            if (result.differentValues.length > 0) {
+                resultDiv.innerHTML += "<h3>異なる値を持つエントリ</h3><ul>";
+                result.differentValues.forEach(item => {
+                    resultDiv.innerHTML += `<li>${item.key}: ファイル1の値=${item.file1Value}, ファイル2の値=${item.file2Value}</li>`;
+                });
+                resultDiv.innerHTML += "</ul>";
+            }
+        }
+    </script>
+</body>
+</html>
