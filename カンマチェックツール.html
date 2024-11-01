@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>カンマチェックツール</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            margin-right: 5px;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border: 1px solid #ccc;
+            white-space: pre-wrap; /* 改行を反映 */
+        }
+    </style>
+</head>
+<body>
+    <h1>カンマチェックツール</h1>
+    <p>以下にテキストを入力してください。各行の末尾にカンマがあるかチェックし、必要に応じてカンマを追加します。</p>
+    <textarea id="inputText" placeholder="ここにテキストを入力..."></textarea><br>
+    <button onclick="checkComma()">チェックする</button>
+    <button onclick="copyResult()">結果をコピー</button>
+    <h2>結果:</h2>
+    <pre id="result"></pre>
+    <h2>修正後のテキスト:</h2>
+    <pre id="fixedResult"></pre>
+
+    <script>
+        function checkComma() {
+            const text = document.getElementById('inputText').value;
+            const lines = text.split('\n');
+            let result = '';
+            let fixedLines = [];
+
+            lines.forEach((line, index) => {
+                if (line.trim() === '') {
+                    // 空行はスキップ
+                    fixedLines.push(line);
+                    return;
+                }
+                if (line.trim().endsWith(',')) {
+                    result += `行 ${index + 1}: カンマがあります\n`;
+                    fixedLines.push(line); // そのまま追加
+                } else {
+                    result += `行 ${index + 1}: カンマはありません\n`;
+                    fixedLines.push(line + ','); // カンマを追加
+                }
+            });
+
+            document.getElementById('result').innerText = result;
+            document.getElementById('fixedResult').innerText = fixedLines.join('\n'); // 修正後のテキストを表示
+        }
+
+        function copyResult() {
+            const fixedText = document.getElementById('fixedResult').innerText;
+            navigator.clipboard.writeText(fixedText)
+                .then(() => {
+                    alert('修正後のテキストがコピーされました。');
+                })
+                .catch(err => {
+                    alert('コピーに失敗しました: ', err);
+                });
+        }
+    </script>
+</body>
+</html>
