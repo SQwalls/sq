@@ -2,10 +2,10 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>en_us.json更新部分確認ツール</title>
+    <title>ファイル比較ツール</title>
 </head>
 <body>
-    <h1>en_us.json更新部分確認ツール</h1>
+    <h1>ファイル比較ツール</h1>
     <form>
         <label>ファイル1:</label>
         <input type="file" id="file1" accept=".json"><br><br>
@@ -40,7 +40,7 @@
                 json2 = JSON.parse(content2);
             } catch (error) {
                 console.error("JSONのパースに失敗しました:", error);
-                alert("ファイルが正しいJSON形式ではありません。");
+                alert("ファイルが正しいJSON形式ではありません。エラー内容: " + error.message);
                 return;
             }
 
@@ -86,7 +86,7 @@
             if (result.onlyInFile1.length > 0) {
                 resultDiv.innerHTML += "<h3>ファイル1にのみ存在するエントリ</h3><ul>";
                 result.onlyInFile1.forEach(item => {
-                    resultDiv.innerHTML += `<li>${item.key}: ${item.value}</li>`;
+                    resultDiv.innerHTML += `<li>"${item.key}": "${item.value}"</li>`;
                 });
                 resultDiv.innerHTML += "</ul>";
             }
@@ -94,7 +94,7 @@
             if (result.onlyInFile2.length > 0) {
                 resultDiv.innerHTML += "<h3>ファイル2にのみ存在するエントリ</h3><ul>";
                 result.onlyInFile2.forEach(item => {
-                    resultDiv.innerHTML += `<li>${item.key}: ${item.value}</li>`;
+                    resultDiv.innerHTML += `<li>"${item.key}": "${item.value}"</li>`;
                 });
                 resultDiv.innerHTML += "</ul>";
             }
@@ -102,7 +102,7 @@
             if (result.differentValues.length > 0) {
                 resultDiv.innerHTML += "<h3>異なる値を持つエントリ</h3><ul>";
                 result.differentValues.forEach(item => {
-                    resultDiv.innerHTML += `<li>${item.key}: ファイル1の値=${item.file1Value}, ファイル2の値=${item.file2Value}</li>`;
+                    resultDiv.innerHTML += `<li>"${item.key}": "ファイル1の値=${item.file1Value}", "ファイル2の値=${item.file2Value}"</li>`;
                 });
                 resultDiv.innerHTML += "</ul>";
             }
